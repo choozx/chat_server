@@ -1,0 +1,8 @@
+server:
+  host: "localhost"
+  port: 40012
+  netty:
+    boss-count: 10
+    worker-count: 200
+
+data-length: 0
