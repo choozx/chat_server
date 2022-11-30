@@ -10,4 +10,5 @@ public class User {
 
     private String nickName;
     private Channel channel;
+    private String roomName;
 }

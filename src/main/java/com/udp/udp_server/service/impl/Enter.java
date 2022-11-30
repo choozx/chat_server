@@ -32,11 +32,8 @@ public class Enter implements MessageMethod {
         String nickName = chatMessage.getNickName();
         PbMessage.ChatMessage.Builder builder = PbMessage.ChatMessage.newBuilder();
 
-        User user = User.builder()
-                .nickName(nickName)
-                .channel(channel)
-                .build();
-        //User객체 생성? 근데 Create에서도 만들고 여기서도 만드네? 뭔가 이상한데?
+        User user = world.getUser(nickName);
+        user.setRoomName(roomName);
 
         if (world.getRoomsMap().containsKey(roomName)) {
             Room room = world.getRoomsMap().get(roomName);

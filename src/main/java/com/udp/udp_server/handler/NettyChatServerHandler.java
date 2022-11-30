@@ -1,5 +1,6 @@
 package com.udp.udp_server.handler;
 
+import com.udp.udp_server.domain.Room;
 import com.udp.udp_server.domain.User;
 import com.udp.udp_server.domain.World;
 import com.udp.udp_server.service.MessageMethod;
@@ -7,6 +8,8 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.handler.timeout.IdleState;
+import io.netty.handler.timeout.IdleStateEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +42,7 @@ public class NettyChatServerHandler extends SimpleChannelInboundHandler<PbMessag
     private final World world;
 
     @Autowired
-    public void setMessageMethodMap(Set<MessageMethod> messageMethodSet){
+    public void setMessageMethodMap(Set<MessageMethod> messageMethodSet) {
         this.messageMethodMap = messageMethodSet.stream().collect(Collectors.toMap(MessageMethod::getMethod, Function.identity()));
     }
 
@@ -59,12 +62,12 @@ public class NettyChatServerHandler extends SimpleChannelInboundHandler<PbMessag
         Channel channel = channelHandlerContext.channel();
 
         /* 월드에 등록되어 있는 사용자인지 체크 */
-        if (!world.getUserMap().containsKey(chatMessage.getNickName())){
+        if (!world.getUserMap().containsKey(chatMessage.getNickName())) {
             //계정 생성후 월드에 등록
             //안좋은거 매번 메세지가 여기를 통해 들어올텐데 매번 체크를 해야됨. 비효울적
             //근데 베스트인건 채널이 활성화 될때 입력해주는게 좋긴한데 입력 받을 방법이 없네... 핸들러를 다른걸 써야되나?
             PbMessage.ChatMessage.Builder builder = PbMessage.ChatMessage.newBuilder();
-            createUser(channel, chatMessage.getNickName());
+            createUser(channel, chatMessage);
 
             builder.setMsg("계정생성성공\r\n" + "====방 목록====\r\n" + world.getAllRoomName());
             //builder.setChatMethod(); 생성성공에 대한 메소드 추가하기
@@ -84,18 +87,41 @@ public class NettyChatServerHandler extends SimpleChannelInboundHandler<PbMessag
     }
 
     @Override
-    public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
-        //TODO 클라에서 예상치 못한 종료로 인해서 남아있는 더미소켓 제거햐야됨
-        super.userEventTriggered(ctx, evt);
+    public void userEventTriggered(ChannelHandlerContext ctx, Object evt) {
+        //read_idle : 클라가 입력이 없으면 끊음
+        //write_idle : 클라가 받는게 없으면 끊음
+        //all_idle : 둘다 없으면 끊음? (and or 모르겠네)
+        Channel channel = ctx.channel();
+
+        if (evt instanceof IdleStateEvent) {
+            IdleStateEvent e = (IdleStateEvent) evt;
+            if (e.state() == IdleState.READER_IDLE) {
+                PbMessage.ChatMessage.Builder builder = PbMessage.ChatMessage.newBuilder();
+                builder.setMsg("입력이 없어 서버와 연결이 끊어집니다");
+                channel.writeAndFlush(builder.build());
+
+                User user = world.getUser(channel);
+                Room room = world.getRoom(user.getRoomName());
+
+                room.quit(user.getNickName()); //방에서 유저 지유고
+                if (room.getUserConcurrentHashMap().size() == 0) { //만약 방이 비었다면 방도 지우고
+                    world.removeRoom(room.getName());
+                }
+                world.removeUser(user.getNickName()); //월드에서 유저 지우기
+
+                channel.closeFuture();
+                channel.close(); //채널 닫기
+            }
+        }
     }
 
-    private void createUser(Channel channel, String nickName){
+    private void createUser(Channel channel, PbMessage.ChatMessage chatMessage) {
         User user = User.builder()
-                .nickName(nickName)
+                .nickName(chatMessage.getNickName())
                 .channel(channel)
                 .build();
 
-        world.putUser(nickName, user);
+        world.putUser(chatMessage.getNickName(), user);
     }
 
 }

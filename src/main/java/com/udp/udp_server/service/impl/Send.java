@@ -22,20 +22,22 @@ public class Send implements MessageMethod {
 
     @Override
     public void process(Channel channel, PbMessage.ChatMessage chatMessage) {
-        String roomNum = chatMessage.getRoomName();
-        String msg = chatMessage.getMsg();
+        synchronized (this){
+            String roomNum = chatMessage.getRoomName();
+            String msg = chatMessage.getMsg();
 
-        PbMessage.ChatMessage.Builder builder = PbMessage.ChatMessage.newBuilder();
+            PbMessage.ChatMessage.Builder builder = PbMessage.ChatMessage.newBuilder();
 
-        Room room = world.getRoom(roomNum);
+            Room room = world.getRoom(roomNum);
 
-        for (User user : room.getUserList()) {
-            if (user.getNickName().equals(chatMessage.getNickName())) {
-                builder.setMsg("me : " + msg);
-            } else {
-                builder.setMsg(chatMessage.getNickName() + " : " + msg);
+            for (User user : room.getUserConcurrentHashMap().values()) {
+                if (user.getNickName().equals(chatMessage.getNickName())) {
+                    builder.setMsg("me : " + msg);
+                } else {
+                    builder.setMsg(chatMessage.getNickName() + " : " + msg);
+                }
+                user.getChannel().writeAndFlush(builder.build());
             }
-            user.getChannel().writeAndFlush(builder.build());
         }
     }
 }
