@@ -25,6 +25,7 @@ public class Quit implements MessageMethod {
     public void process(Channel channel, PbMessage.ChatMessage chatMessage) {
         String roomName = chatMessage.getRoomName();
         String nickName = chatMessage.getNickName();
+        PbMessage.ChatMessage.Builder builder = PbMessage.ChatMessage.newBuilder();
 
         //채팅방에서 유저 지우기
         Room room = world.getRoom(roomName);
@@ -34,6 +35,9 @@ public class Quit implements MessageMethod {
         if (room.getUserConcurrentHashMap().size() == 0) {
             world.removeRoom(roomName);
         }
+
+        builder.setMsg("===현재방=== : {}" + world.getAllRoomName());
+        channel.writeAndFlush(builder.build());
         log.info("===현재방=== : {}", world.getAllRoomName());
     }
 

@@ -108,6 +108,10 @@ public final class PbCommonEnum {
        * <code>EXIT = 5;</code>
        */
       EXIT(5),
+      /**
+       * <code>Idle = 6;</code>
+       */
+      Idle(6),
       UNRECOGNIZED(-1),
       ;
 
@@ -135,6 +139,10 @@ public final class PbCommonEnum {
        * <code>EXIT = 5;</code>
        */
       public static final int EXIT_VALUE = 5;
+      /**
+       * <code>Idle = 6;</code>
+       */
+      public static final int Idle_VALUE = 6;
 
 
       public final int getNumber() {
@@ -161,6 +169,7 @@ public final class PbCommonEnum {
           case 3: return SEND;
           case 4: return QUIT;
           case 5: return EXIT;
+          case 6: return Idle;
           default: return null;
         }
       }
@@ -527,10 +536,10 @@ public final class PbCommonEnum {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\022PbCommonEnum.proto\"S\n\nChatMethod\"E\n\004Ty" +
+      "\n\022PbCommonEnum.proto\"]\n\nChatMethod\"O\n\004Ty" +
       "pe\022\010\n\004NONE\020\000\022\n\n\006CREATE\020\001\022\t\n\005ENTER\020\002\022\010\n\004S" +
-      "END\020\003\022\010\n\004QUIT\020\004\022\010\n\004EXIT\020\005B\032\n\nprotomodelB" +
-      "\014PbCommonEnumb\006proto3"
+      "END\020\003\022\010\n\004QUIT\020\004\022\010\n\004EXIT\020\005\022\010\n\004Idle\020\006B\032\n\np" +
+      "rotomodelB\014PbCommonEnumb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {

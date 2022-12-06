@@ -18,7 +18,7 @@ public class Enter implements MessageMethod {
 
     /**
      * Enter, Quit는 동기화 필수
-     * */
+     */
     private final World world;
 
     @Override
@@ -27,7 +27,7 @@ public class Enter implements MessageMethod {
     }
 
     @Override
-    public void process(Channel channel, PbMessage.ChatMessage chatMessage) {
+    public synchronized void process(Channel channel, PbMessage.ChatMessage chatMessage) {
         String roomName = chatMessage.getRoomName();
         String nickName = chatMessage.getNickName();
         PbMessage.ChatMessage.Builder builder = PbMessage.ChatMessage.newBuilder();
@@ -35,9 +35,9 @@ public class Enter implements MessageMethod {
         User user = world.getUser(nickName);
         user.setRoomName(roomName);
 
-        if (world.getRoomsMap().containsKey(roomName)) {
-            Room room = world.getRoomsMap().get(roomName);
-            room.enter(nickName, user);
+        if (world.getRooms().containsKey(roomName)) {
+            Room room = world.getRooms().get(roomName);
+            room.join(nickName, user);
             builder.setMsg("입장했습니다");
         } else {
             builder.setMsg("없는 방입니다");

@@ -11,23 +11,23 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
 @Component
+@RequiredArgsConstructor
 public class World {
 
-    private ConcurrentHashMap<String, Room> roomsMap = new ConcurrentHashMap<>();
-    private HashMap<String, User> userMap = new HashMap<>();
+    private ConcurrentHashMap<String, Room> rooms = new ConcurrentHashMap<>();
+    private HashMap<String, User> connectUserMap = new HashMap<>();
 
     public Room getRoom(String key) {
-        return roomsMap.get(key);
+        return rooms.get(key);
     }
 
     public synchronized void putRoom(String roomName, Room room) {
-        this.roomsMap.put(roomName, room);
+        this.rooms.put(roomName, room);
     }
 
     public synchronized void removeRoom(String roomName) {
-        this.roomsMap.remove(roomName);
+        this.rooms.remove(roomName);
     }
 
     /**
@@ -35,32 +35,32 @@ public class World {
      */
     public String getAllRoomName() {
         StringBuilder roomName = new StringBuilder();
-        for (String key : roomsMap.keySet()) {
+        for (String key : rooms.keySet()) {
             roomName.append(" | ").append(key);
         }
         return roomName.toString();
     }
 
     public User getUser(String nickName) {
-        return userMap.get(nickName);
+        return connectUserMap.get(nickName);
     }
 
     public User getUser(Channel channel) {
-        return userMap.values().stream()
+        return connectUserMap.values().stream()
                 .filter(user -> user.getChannel() == channel)
                 .findFirst()
                 .orElseThrow();
     }
 
     public void putUser(String nickName, User user) {
-        this.userMap.put(nickName, user);
+        this.connectUserMap.put(nickName, user);
     }
 
     /**
      * 유저가 채팅 프로그램을 닫을 때
      */
     public void removeUser(String nickName) {
-        userMap.remove(nickName);
+        connectUserMap.remove(nickName);
     }
 
     public void destroy(){

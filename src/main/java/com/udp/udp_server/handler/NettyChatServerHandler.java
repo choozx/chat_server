@@ -62,7 +62,7 @@ public class NettyChatServerHandler extends SimpleChannelInboundHandler<PbMessag
         Channel channel = channelHandlerContext.channel();
 
         /* 월드에 등록되어 있는 사용자인지 체크 */
-        if (!world.getUserMap().containsKey(chatMessage.getNickName())) {
+        if (!world.getConnectUserMap().containsKey(chatMessage.getNickName())) {
             //계정 생성후 월드에 등록
             //안좋은거 매번 메세지가 여기를 통해 들어올텐데 매번 체크를 해야됨. 비효울적
             //근데 베스트인건 채널이 활성화 될때 입력해주는게 좋긴한데 입력 받을 방법이 없네... 핸들러를 다른걸 써야되나?
@@ -70,7 +70,6 @@ public class NettyChatServerHandler extends SimpleChannelInboundHandler<PbMessag
             createUser(channel, chatMessage);
 
             builder.setMsg("계정생성성공\r\n" + "====방 목록====\r\n" + world.getAllRoomName());
-            //builder.setChatMethod(); 생성성공에 대한 메소드 추가하기
 
             channel.writeAndFlush(builder.build());
             return;
@@ -78,7 +77,6 @@ public class NettyChatServerHandler extends SimpleChannelInboundHandler<PbMessag
 
         MessageMethod messageMethod = messageMethodMap.get(chatMessage.getChatMethod());
         messageMethod.process(channel, chatMessage);
-
     }
 
     @Override
@@ -90,7 +88,7 @@ public class NettyChatServerHandler extends SimpleChannelInboundHandler<PbMessag
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) {
         //read_idle : 클라가 입력이 없으면 끊음
         //write_idle : 클라가 받는게 없으면 끊음
-        //all_idle : 둘다 없으면 끊음? (and or 모르겠네)
+        //all_idle : 둘다 없으면 끊음? (and 인지 or 인지 모르겠네)
         Channel channel = ctx.channel();
 
         if (evt instanceof IdleStateEvent) {
@@ -98,6 +96,7 @@ public class NettyChatServerHandler extends SimpleChannelInboundHandler<PbMessag
             if (e.state() == IdleState.READER_IDLE) {
                 PbMessage.ChatMessage.Builder builder = PbMessage.ChatMessage.newBuilder();
                 builder.setMsg("입력이 없어 서버와 연결이 끊어집니다");
+                builder.setChatMethod(PbCommonEnum.ChatMethod.Type.Idle);
                 channel.writeAndFlush(builder.build());
 
                 User user = world.getUser(channel);
@@ -116,6 +115,10 @@ public class NettyChatServerHandler extends SimpleChannelInboundHandler<PbMessag
     }
 
     private void createUser(Channel channel, PbMessage.ChatMessage chatMessage) {
+        if (world.getConnectUserMap().containsKey(chatMessage.getNickName())){
+            //todo 같은 nickName exception
+        }
+
         User user = User.builder()
                 .nickName(chatMessage.getNickName())
                 .channel(channel)
