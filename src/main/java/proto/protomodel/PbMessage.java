@@ -56,6 +56,15 @@ public final class PbMessage {
      */
     com.google.protobuf.ByteString
         getMsgBytes();
+
+    /**
+     * <code>optional .chatException chatException = 5;</code>
+     */
+    int getChatExceptionValue();
+    /**
+     * <code>optional .chatException chatException = 5;</code>
+     */
+    protomodel.PbException.chatException getChatException();
   }
   /**
    * Protobuf type {@code ChatMessage}
@@ -73,6 +82,7 @@ public final class PbMessage {
       roomName_ = "";
       nickName_ = "";
       msg_ = "";
+      chatException_ = 0;
     }
 
     @java.lang.Override
@@ -122,6 +132,12 @@ public final class PbMessage {
               java.lang.String s = input.readStringRequireUtf8();
 
               msg_ = s;
+              break;
+            }
+            case 40: {
+              int rawValue = input.readEnum();
+
+              chatException_ = rawValue;
               break;
             }
           }
@@ -265,6 +281,22 @@ public final class PbMessage {
       }
     }
 
+    public static final int CHATEXCEPTION_FIELD_NUMBER = 5;
+    private int chatException_;
+    /**
+     * <code>optional .chatException chatException = 5;</code>
+     */
+    public int getChatExceptionValue() {
+      return chatException_;
+    }
+    /**
+     * <code>optional .chatException chatException = 5;</code>
+     */
+    public protomodel.PbException.chatException getChatException() {
+      protomodel.PbException.chatException result = protomodel.PbException.chatException.valueOf(chatException_);
+      return result == null ? protomodel.PbException.chatException.UNRECOGNIZED : result;
+    }
+
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -289,6 +321,9 @@ public final class PbMessage {
       if (!getMsgBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 4, msg_);
       }
+      if (chatException_ != protomodel.PbException.chatException.GENERAL_EXCEPTION.getNumber()) {
+        output.writeEnum(5, chatException_);
+      }
     }
 
     public int getSerializedSize() {
@@ -308,6 +343,10 @@ public final class PbMessage {
       }
       if (!getMsgBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, msg_);
+      }
+      if (chatException_ != protomodel.PbException.chatException.GENERAL_EXCEPTION.getNumber()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeEnumSize(5, chatException_);
       }
       memoizedSize = size;
       return size;
@@ -332,6 +371,7 @@ public final class PbMessage {
           .equals(other.getNickName());
       result = result && getMsg()
           .equals(other.getMsg());
+      result = result && chatException_ == other.chatException_;
       return result;
     }
 
@@ -350,6 +390,8 @@ public final class PbMessage {
       hash = (53 * hash) + getNickName().hashCode();
       hash = (37 * hash) + MSG_FIELD_NUMBER;
       hash = (53 * hash) + getMsg().hashCode();
+      hash = (37 * hash) + CHATEXCEPTION_FIELD_NUMBER;
+      hash = (53 * hash) + chatException_;
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -476,6 +518,8 @@ public final class PbMessage {
 
         msg_ = "";
 
+        chatException_ = 0;
+
         return this;
       }
 
@@ -502,6 +546,7 @@ public final class PbMessage {
         result.roomName_ = roomName_;
         result.nickName_ = nickName_;
         result.msg_ = msg_;
+        result.chatException_ = chatException_;
         onBuilt();
         return result;
       }
@@ -557,6 +602,9 @@ public final class PbMessage {
         if (!other.getMsg().isEmpty()) {
           msg_ = other.msg_;
           onChanged();
+        }
+        if (other.chatException_ != 0) {
+          setChatExceptionValue(other.getChatExceptionValue());
         }
         onChanged();
         return this;
@@ -834,6 +882,50 @@ public final class PbMessage {
         onChanged();
         return this;
       }
+
+      private int chatException_ = 0;
+      /**
+       * <code>optional .chatException chatException = 5;</code>
+       */
+      public int getChatExceptionValue() {
+        return chatException_;
+      }
+      /**
+       * <code>optional .chatException chatException = 5;</code>
+       */
+      public Builder setChatExceptionValue(int value) {
+        chatException_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional .chatException chatException = 5;</code>
+       */
+      public protomodel.PbException.chatException getChatException() {
+        protomodel.PbException.chatException result = protomodel.PbException.chatException.valueOf(chatException_);
+        return result == null ? protomodel.PbException.chatException.UNRECOGNIZED : result;
+      }
+      /**
+       * <code>optional .chatException chatException = 5;</code>
+       */
+      public Builder setChatException(protomodel.PbException.chatException value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        
+        chatException_ = value.getNumber();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional .chatException chatException = 5;</code>
+       */
+      public Builder clearChatException() {
+        
+        chatException_ = 0;
+        onChanged();
+        return this;
+      }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return this;
@@ -897,11 +989,12 @@ public final class PbMessage {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\017PbMessage.proto\032\022PbCommonEnum.proto\"d\n" +
-      "\013ChatMessage\022$\n\nchatMethod\030\001 \001(\0162\020.ChatM" +
-      "ethod.Type\022\020\n\010roomName\030\002 \001(\t\022\020\n\010nickName" +
-      "\030\003 \001(\t\022\013\n\003msg\030\004 \001(\tB\027\n\nprotomodelB\tPbMes" +
-      "sageb\006proto3"
+      "\n\017PbMessage.proto\032\022PbCommonEnum.proto\032\021P" +
+      "bException.proto\"\213\001\n\013ChatMessage\022$\n\nchat" +
+      "Method\030\001 \001(\0162\020.ChatMethod.Type\022\020\n\010roomNa" +
+      "me\030\002 \001(\t\022\020\n\010nickName\030\003 \001(\t\022\013\n\003msg\030\004 \001(\t\022" +
+      "%\n\rchatException\030\005 \001(\0162\016.chatExceptionB\027" +
+      "\n\nprotomodelB\tPbMessageb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -915,14 +1008,16 @@ public final class PbMessage {
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
           protomodel.PbCommonEnum.getDescriptor(),
+          protomodel.PbException.getDescriptor(),
         }, assigner);
     internal_static_ChatMessage_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_ChatMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ChatMessage_descriptor,
-        new java.lang.String[] { "ChatMethod", "RoomName", "NickName", "Msg", });
+        new java.lang.String[] { "ChatMethod", "RoomName", "NickName", "Msg", "ChatException", });
     protomodel.PbCommonEnum.getDescriptor();
+    protomodel.PbException.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

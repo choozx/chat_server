@@ -17,9 +17,9 @@ public final class PbException {
         (com.google.protobuf.ExtensionRegistryLite) registry);
   }
   /**
-   * Protobuf enum {@code BallException}
+   * Protobuf enum {@code chatException}
    */
-  public enum BallException
+  public enum chatException
       implements com.google.protobuf.ProtocolMessageEnum {
     /**
      * <code>GENERAL_EXCEPTION = 0;</code>
@@ -45,6 +45,10 @@ public final class PbException {
      * <code>INVALID_PARAMETER = 5;</code>
      */
     INVALID_PARAMETER(5),
+    /**
+     * <code>DUPLICATE_NICKNAME = 6;</code>
+     */
+    DUPLICATE_NICKNAME(6),
     UNRECOGNIZED(-1),
     ;
 
@@ -72,6 +76,10 @@ public final class PbException {
      * <code>INVALID_PARAMETER = 5;</code>
      */
     public static final int INVALID_PARAMETER_VALUE = 5;
+    /**
+     * <code>DUPLICATE_NICKNAME = 6;</code>
+     */
+    public static final int DUPLICATE_NICKNAME_VALUE = 6;
 
 
     public final int getNumber() {
@@ -86,11 +94,11 @@ public final class PbException {
      * @deprecated Use {@link #forNumber(int)} instead.
      */
     @java.lang.Deprecated
-    public static BallException valueOf(int value) {
+    public static chatException valueOf(int value) {
       return forNumber(value);
     }
 
-    public static BallException forNumber(int value) {
+    public static chatException forNumber(int value) {
       switch (value) {
         case 0: return GENERAL_EXCEPTION;
         case 1: return ACCESS_DENIED;
@@ -98,19 +106,20 @@ public final class PbException {
         case 3: return MALFORMED_SESSION;
         case 4: return DUPLICATED_LOGIN;
         case 5: return INVALID_PARAMETER;
+        case 6: return DUPLICATE_NICKNAME;
         default: return null;
       }
     }
 
-    public static com.google.protobuf.Internal.EnumLiteMap<BallException>
+    public static com.google.protobuf.Internal.EnumLiteMap<chatException>
         internalGetValueMap() {
       return internalValueMap;
     }
     private static final com.google.protobuf.Internal.EnumLiteMap<
-        BallException> internalValueMap =
-          new com.google.protobuf.Internal.EnumLiteMap<BallException>() {
-            public BallException findValueByNumber(int number) {
-              return BallException.forNumber(number);
+        chatException> internalValueMap =
+          new com.google.protobuf.Internal.EnumLiteMap<chatException>() {
+            public chatException findValueByNumber(int number) {
+              return chatException.forNumber(number);
             }
           };
 
@@ -127,9 +136,9 @@ public final class PbException {
       return protomodel.PbException.getDescriptor().getEnumTypes().get(0);
     }
 
-    private static final BallException[] VALUES = values();
+    private static final chatException[] VALUES = values();
 
-    public static BallException valueOf(
+    public static chatException valueOf(
         com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
       if (desc.getType() != getDescriptor()) {
         throw new java.lang.IllegalArgumentException(
@@ -143,11 +152,11 @@ public final class PbException {
 
     private final int value;
 
-    private BallException(int value) {
+    private chatException(int value) {
       this.value = value;
     }
 
-    // @@protoc_insertion_point(enum_scope:BallException)
+    // @@protoc_insertion_point(enum_scope:chatException)
   }
 
   public static final int CODE_FIELD_NUMBER = 50000;
@@ -182,16 +191,17 @@ public final class PbException {
   static {
     java.lang.String[] descriptorData = {
       "\n\021PbException.proto\032 google/protobuf/des" +
-      "criptor.proto*\361\001\n\rBallException\022%\n\021GENER" +
+      "criptor.proto*\232\002\n\rchatException\022%\n\021GENER" +
       "AL_EXCEPTION\020\000\032\016\200\265\030\220N\212\265\030\005ERROR\022!\n\rACCESS" +
       "_DENIED\020\001\032\016\200\265\030\221N\212\265\030\005ERROR\022\"\n\017SESSION_EXP" +
       "IRED\020\002\032\r\200\265\030\222N\212\265\030\004INFO\022%\n\021MALFORMED_SESSI" +
       "ON\020\003\032\016\200\265\030\223N\212\265\030\005ERROR\022#\n\020DUPLICATED_LOGIN" +
       "\020\004\032\r\200\265\030\224N\212\265\030\004INFO\022&\n\021INVALID_PARAMETER\020\005" +
-      "\032\017\200\265\030\260\352\001\212\265\030\005DEBUG:1\n\004code\022!.google.proto" +
-      "buf.EnumValueOptions\030\320\206\003 \001(\005:2\n\005level\022!." +
-      "google.protobuf.EnumValueOptions\030\321\206\003 \001(\t",
-      "B\031\n\nprotomodelB\013PbExceptionb\006proto3"
+      "\032\017\200\265\030\260\352\001\212\265\030\005DEBUG\022\'\n\022DUPLICATE_NICKNAME\020" +
+      "\006\032\017\200\265\030\301\270\002\212\265\030\005ERROR:1\n\004code\022!.google.prot" +
+      "obuf.EnumValueOptions\030\320\206\003 \001(\005:2\n\005level\022!",
+      ".google.protobuf.EnumValueOptions\030\321\206\003 \001(" +
+      "\tB\031\n\nprotomodelB\013PbExceptionb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {

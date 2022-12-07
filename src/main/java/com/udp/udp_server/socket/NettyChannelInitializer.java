@@ -25,7 +25,6 @@ public class NettyChannelInitializer extends ChannelInitializer<SocketChannel> {
     protected void initChannel(SocketChannel socketChannel) {
         ChannelPipeline channelPipeline = socketChannel.pipeline();
 
-        //TODO protobufEncoder/Decoder 로 변경
         channelPipeline.addLast(new ProtobufVarint32FrameDecoder());
         channelPipeline.addLast(new ProtobufDecoder(PbMessage.ChatMessage.getDefaultInstance()));
 

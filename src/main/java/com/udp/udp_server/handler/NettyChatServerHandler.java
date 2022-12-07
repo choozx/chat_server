@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import protomodel.PbCommonEnum;
+import protomodel.PbException;
 import protomodel.PbMessage;
 
 import java.net.InetAddress;
@@ -62,16 +63,11 @@ public class NettyChatServerHandler extends SimpleChannelInboundHandler<PbMessag
         Channel channel = channelHandlerContext.channel();
 
         /* 월드에 등록되어 있는 사용자인지 체크 */
-        if (!world.getConnectUserMap().containsKey(chatMessage.getNickName())) {
+        if (chatMessage.getChatMethod() == PbCommonEnum.ChatMethod.Type.JOIN) {
             //계정 생성후 월드에 등록
             //안좋은거 매번 메세지가 여기를 통해 들어올텐데 매번 체크를 해야됨. 비효울적
             //근데 베스트인건 채널이 활성화 될때 입력해주는게 좋긴한데 입력 받을 방법이 없네... 핸들러를 다른걸 써야되나?
-            PbMessage.ChatMessage.Builder builder = PbMessage.ChatMessage.newBuilder();
             createUser(channel, chatMessage);
-
-            builder.setMsg("계정생성성공\r\n" + "====방 목록====\r\n" + world.getAllRoomName());
-
-            channel.writeAndFlush(builder.build());
             return;
         }
 
@@ -96,7 +92,7 @@ public class NettyChatServerHandler extends SimpleChannelInboundHandler<PbMessag
             if (e.state() == IdleState.READER_IDLE) {
                 PbMessage.ChatMessage.Builder builder = PbMessage.ChatMessage.newBuilder();
                 builder.setMsg("입력이 없어 서버와 연결이 끊어집니다");
-                builder.setChatMethod(PbCommonEnum.ChatMethod.Type.Idle);
+                builder.setChatMethod(PbCommonEnum.ChatMethod.Type.IDLE);
                 channel.writeAndFlush(builder.build());
 
                 User user = world.getUser(channel);
@@ -114,17 +110,21 @@ public class NettyChatServerHandler extends SimpleChannelInboundHandler<PbMessag
         }
     }
 
-    private void createUser(Channel channel, PbMessage.ChatMessage chatMessage) {
+    private synchronized void createUser(Channel channel, PbMessage.ChatMessage chatMessage) { //sync는 같은 닉네임을 방지하기 위해
+        PbMessage.ChatMessage.Builder builder = PbMessage.ChatMessage.newBuilder();
         if (world.getConnectUserMap().containsKey(chatMessage.getNickName())){
-            //todo 같은 nickName exception
+            builder.setChatException(PbException.chatException.DUPLICATE_NICKNAME);
+            builder.setMsg("already exist nickname");
+        } else {
+            User user = User.builder()
+                    .nickName(chatMessage.getNickName())
+                    .channel(channel)
+                    .build();
+
+            world.putUser(chatMessage.getNickName(), user);
+            builder.setMsg("계정생성성공\r\n" + "====방 목록====\r\n" + world.getAllRoomName());
         }
-
-        User user = User.builder()
-                .nickName(chatMessage.getNickName())
-                .channel(channel)
-                .build();
-
-        world.putUser(chatMessage.getNickName(), user);
+        channel.writeAndFlush(builder.build());
     }
 
 }
