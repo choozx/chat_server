@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import protomodel.PbCommonEnum;
+import protomodel.PbException;
 import protomodel.PbMessage;
 
 @Slf4j
@@ -41,7 +42,7 @@ public class Enter implements MessageMethod {
             builder.setMsg("입장했습니다");
         } else {
             builder.setMsg("없는 방입니다");
-            //TODO 다시 입력하게 하기
+            builder.setChatException(PbException.chatException.NOT_EXIST_ROOM);
         }
         channel.writeAndFlush(builder.build());
         log.info("===현재방=== : {}", world.getAllRoomName());

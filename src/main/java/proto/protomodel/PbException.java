@@ -49,6 +49,10 @@ public final class PbException {
      * <code>DUPLICATE_NICKNAME = 6;</code>
      */
     DUPLICATE_NICKNAME(6),
+    /**
+     * <code>NOT_EXIST_ROOM = 7;</code>
+     */
+    NOT_EXIST_ROOM(7),
     UNRECOGNIZED(-1),
     ;
 
@@ -80,6 +84,10 @@ public final class PbException {
      * <code>DUPLICATE_NICKNAME = 6;</code>
      */
     public static final int DUPLICATE_NICKNAME_VALUE = 6;
+    /**
+     * <code>NOT_EXIST_ROOM = 7;</code>
+     */
+    public static final int NOT_EXIST_ROOM_VALUE = 7;
 
 
     public final int getNumber() {
@@ -107,6 +115,7 @@ public final class PbException {
         case 4: return DUPLICATED_LOGIN;
         case 5: return INVALID_PARAMETER;
         case 6: return DUPLICATE_NICKNAME;
+        case 7: return NOT_EXIST_ROOM;
         default: return null;
       }
     }
@@ -191,17 +200,18 @@ public final class PbException {
   static {
     java.lang.String[] descriptorData = {
       "\n\021PbException.proto\032 google/protobuf/des" +
-      "criptor.proto*\232\002\n\rchatException\022%\n\021GENER" +
+      "criptor.proto*\275\002\n\rchatException\022%\n\021GENER" +
       "AL_EXCEPTION\020\000\032\016\200\265\030\220N\212\265\030\005ERROR\022!\n\rACCESS" +
       "_DENIED\020\001\032\016\200\265\030\221N\212\265\030\005ERROR\022\"\n\017SESSION_EXP" +
       "IRED\020\002\032\r\200\265\030\222N\212\265\030\004INFO\022%\n\021MALFORMED_SESSI" +
       "ON\020\003\032\016\200\265\030\223N\212\265\030\005ERROR\022#\n\020DUPLICATED_LOGIN" +
       "\020\004\032\r\200\265\030\224N\212\265\030\004INFO\022&\n\021INVALID_PARAMETER\020\005" +
-      "\032\017\200\265\030\260\352\001\212\265\030\005DEBUG\022\'\n\022DUPLICATE_NICKNAME\020" +
-      "\006\032\017\200\265\030\301\270\002\212\265\030\005ERROR:1\n\004code\022!.google.prot" +
-      "obuf.EnumValueOptions\030\320\206\003 \001(\005:2\n\005level\022!",
-      ".google.protobuf.EnumValueOptions\030\321\206\003 \001(" +
-      "\tB\031\n\nprotomodelB\013PbExceptionb\006proto3"
+      "\032\017\200\265\030\260\352\001\212\265\030\005DEBUG\022&\n\022DUPLICATE_NICKNAME\020" +
+      "\006\032\016\200\265\030\301\270\002\212\265\030\004INFO\022\"\n\016NOT_EXIST_ROOM\020\007\032\016\200" +
+      "\265\030\302\270\002\212\265\030\004INFO:1\n\004code\022!.google.protobuf.",
+      "EnumValueOptions\030\320\206\003 \001(\005:2\n\005level\022!.goog" +
+      "le.protobuf.EnumValueOptions\030\321\206\003 \001(\tB\031\n\n" +
+      "protomodelB\013PbExceptionb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {

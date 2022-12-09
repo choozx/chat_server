@@ -85,6 +85,8 @@ public class NettyChatServerHandler extends SimpleChannelInboundHandler<PbMessag
         //read_idle : 클라가 입력이 없으면 끊음
         //write_idle : 클라가 받는게 없으면 끊음
         //all_idle : 둘다 없으면 끊음? (and 인지 or 인지 모르겠네)
+
+        //클라의 예기치 못한 종료와 잠수의 차이를 구별할 수 있을까?
         Channel channel = ctx.channel();
 
         if (evt instanceof IdleStateEvent) {

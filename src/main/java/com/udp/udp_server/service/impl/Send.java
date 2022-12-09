@@ -26,9 +26,7 @@ public class Send implements MessageMethod {
 
     @Override
     public void process(Channel channel, PbMessage.ChatMessage chatMessage) {
-        //들어온 메세지에 대해서 차례대로 처리하지를 않네...
         //todo null check
-
         String roomName = chatMessage.getRoomName();
         String msg = chatMessage.getMsg();
 
@@ -36,7 +34,6 @@ public class Send implements MessageMethod {
 
         Room room = world.getRoom(roomName);
 
-        //ConcurrentHashMap<String, User> userHashMap = room.getUserConcurrentHashMap();
         ChannelGroup channelGroup = room.getChannelGroup();
 
         /*
@@ -48,16 +45,8 @@ public class Send implements MessageMethod {
           알아보기 위해 디버그 모드로 실행시켜 n회차 테스트 해봤더니 a가 보낸 메세지를 b가 받는 타이밍이 모두 다름
           이말인 즉슨 아래의 writeAndFlush 에서 이미 보내고 있던것. 다만 활성화된 체널이 아니다보니 체널을 활성화 하는데 시간이 걸린듯
           약간의 텀이 있다는것에 증거로 A가 보낸 메세지를 B가 받는데 까지 살짝의 딜레이가 존재함
+          사실 잘 모르겠음
         */
-
-//        for (User user : userHashMap.values()) {
-//            if (user.getNickName().equals(chatMessage.getNickName())) {
-//                builder.setMsg("me : " + msg);
-//            } else {
-//                builder.setMsg(chatMessage.getNickName() + " : " + msg);
-//            }
-//            channel.writeAndFlush(builder.build());
-//        }
 
         builder.setMsg(chatMessage.getNickName() + " : " + msg);
         channelGroup.writeAndFlush(builder.build());
