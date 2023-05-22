@@ -1,17 +1,19 @@
 # Netty 기반 채팅 서버
 
 
-클라이언트			 : JAVA(Netty)  
-서버          : JAVA(Netty)  
-프로토콜       : protobuf  
+클라이언트 : JAVA(Netty)  
+서버 : JAVA(Netty)  
+프로토콜 : protobuf  
 
 클라이언트는 추후 다른 repo로 올릴 예정
 
 # 1.구조
 
-월드 (1)  
-&nbsp;&nbsp;&nbsp; └ 채팅방 (N)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; └ 유저 (N)  
+server.  
+
+월드 ConcurrentMap<String, Room> (1)  
+&nbsp;&nbsp;&nbsp; └ 채팅방 ConcurrentMap<String, User> (N)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; └ 유저 User (N)  
 			
 protobuf. 
 ```
@@ -41,8 +43,9 @@ message ChatMethod {
 			
 # 2.동작  
 
-*기본적으로 enum의 type이 send를 제외한 모든 type에 대해 synchronized 적용됨
-*chatMessage의 상태의 따라 분기처리됨 (전략패턴)
+*기본적으로 enum의 type이 send를 제외한 모든 type에 대해 synchronized 적용됨.  
+*chatMessage의 상태의 따라 분기처리 (전략패턴)  
+
 
 - 연결  
 	- 기본적인 TCP의 연결방식으로 작동 (3way-handshake)
@@ -54,6 +57,7 @@ message ChatMethod {
 
 - 입장
 	- 대화시작
+	- A가 메세지를 보내면 A,B,C에게 브로드케스트 됨
 
 - 퇴장
 	- 퇴장시 방의 인원이 0명이면 자동으로 채팅방 삭제
@@ -80,9 +84,8 @@ message ChatMethod {
 
 - 1.무분별한 synchronized의 사용 
 	- 성능이슈 
-- 2.모든 프로토콜을 하나의 메세지가 처리함(Select모델과 유사함) 
-- 3.message의 상태를 클라가 수정이 가능함
-	- 악의적인 버그가 충분히 발생가능
-	- 모든 경우에 예외처리를 할 수 없으므로 상태는 서버에서 관리하도록 해야됨	 
+- 2.모든 프로토콜을 하나의 메세지가 처리함  
+- 3.message의 상태를 클라가 수정이 가능함  
+	- 악의적인 버그가 충분히 발생가능 
 
 
