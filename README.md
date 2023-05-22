@@ -41,7 +41,7 @@ message ChatMethod {
 			
 # 2.동작  
 
-*기본적으로 enum의 type이 send들 제외한 모든 type에 대해 synchronized 적용됨
+*기본적으로 enum의 type이 send를 제외한 모든 type에 대해 synchronized 적용됨
 
 - 연결  
 	- 기본적인 TCP의 연결방식으로 작동 (3hand-shaking)
@@ -78,6 +78,6 @@ message ChatMethod {
 # 4.개선사항
 
 - 1.무분별한 synchronized의 사용 
-- 2.모든 프로토콜을 하나의 메세지로만 정의
+- 2.모든 프로토콜을 하나의 메세지로만 됨 (Select모델과 유사함)
 
 
