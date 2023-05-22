@@ -44,7 +44,7 @@ message ChatMethod {
 *기본적으로 enum의 type이 send를 제외한 모든 type에 대해 synchronized 적용됨
 
 - 연결  
-	- 기본적인 TCP의 연결방식으로 작동 (3hand-shaking)
+	- 기본적인 TCP의 연결방식으로 작동 (3way-handshake)
 	- 계정 생성
 		- 계정의 대한 validCheck
 	- 연결 후 입장 안내
