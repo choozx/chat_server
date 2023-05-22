@@ -42,6 +42,7 @@ message ChatMethod {
 # 2.동작  
 
 *기본적으로 enum의 type이 send를 제외한 모든 type에 대해 synchronized 적용됨
+*chatMessage의 상태의 따라 분기처리됨 (전략패턴)
 
 - 연결  
 	- 기본적인 TCP의 연결방식으로 작동 (3way-handshake)
@@ -78,6 +79,10 @@ message ChatMethod {
 # 4.개선사항
 
 - 1.무분별한 synchronized의 사용 
-- 2.모든 프로토콜을 하나의 메세지로만 됨 (Select모델과 유사함)
+	- 성능이슈 
+- 2.모든 프로토콜을 하나의 메세지가 처리함(Select모델과 유사함) 
+- 3.message의 상태를 클라가 수정이 가능함
+	- 악의적인 버그가 충분히 발생가능
+	- 모든 경우에 예외처리를 할 수 없으므로 상태는 서버에서 관리하도록 해야됨	 
 
 
